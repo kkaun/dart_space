@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:dart_space/data/serializers/serializers.dart';
 
 part 'daily_info.g.dart';
 
@@ -28,5 +29,5 @@ abstract class DailyInfo implements Built<DailyInfo, DailyInfoBuilder> {
     return serializers.deserializeWith(DailyInfo.serializer, json.decode(jsonString));
   }
 
-  static Serializer<DailyInfo> get serializer => _$DailyInfoSerializer;
+  static Serializer<DailyInfo> get serializer => _$dailyInfoSerializer;
 }
