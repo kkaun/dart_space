@@ -15,9 +15,8 @@ class DailyInfoDataSource {
 
   DailyInfoDataSource(this.client);
 
-  Future<DailyInfoSearchResult> searchDailyInfo({
-    String date,
-  }) async {
+  Future<DailyInfoSearchResult> searchDailyInfo(String date,
+  ) async {
     final urlRaw = _searchBaseUrl + '&date=$date';
 
     final urlEncoded = Uri.encodeFull(urlRaw);

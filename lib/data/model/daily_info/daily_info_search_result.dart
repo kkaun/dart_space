@@ -16,6 +16,9 @@ abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, Dai
   String get explanation;
   String get hdurl;
   String get media_type;
+  String get service_version;
+  String get title;
+  String get url;
 
   DailyInfoSearchResult._();
 
