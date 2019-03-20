@@ -6,16 +6,21 @@ part of daily_info;
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<DailyInfo> _$dailyInfoSerializer = new _$DailyInfoSerializer();
+Serializer<DailyInfoSearchResult> _$dailyInfoSearchResultSerializer =
+    new _$DailyInfoSearchResultSerializer();
 
-class _$DailyInfoSerializer implements StructuredSerializer<DailyInfo> {
+class _$DailyInfoSearchResultSerializer
+    implements StructuredSerializer<DailyInfoSearchResult> {
   @override
-  final Iterable<Type> types = const [DailyInfo, _$DailyInfo];
+  final Iterable<Type> types = const [
+    DailyInfoSearchResult,
+    _$DailyInfoSearchResult
+  ];
   @override
-  final String wireName = 'DailyInfo';
+  final String wireName = 'DailyInfoSearchResult';
 
   @override
-  Iterable serialize(Serializers serializers, DailyInfo object,
+  Iterable serialize(Serializers serializers, DailyInfoSearchResult object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'copyright',
@@ -38,9 +43,10 @@ class _$DailyInfoSerializer implements StructuredSerializer<DailyInfo> {
   }
 
   @override
-  DailyInfo deserialize(Serializers serializers, Iterable serialized,
+  DailyInfoSearchResult deserialize(
+      Serializers serializers, Iterable serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new DailyInfoBuilder();
+    final result = new DailyInfoSearchResultBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -75,7 +81,7 @@ class _$DailyInfoSerializer implements StructuredSerializer<DailyInfo> {
   }
 }
 
-class _$DailyInfo extends DailyInfo {
+class _$DailyInfoSearchResult extends DailyInfoSearchResult {
   @override
   final String copyright;
   @override
@@ -87,10 +93,11 @@ class _$DailyInfo extends DailyInfo {
   @override
   final String media_type;
 
-  factory _$DailyInfo([void updates(DailyInfoBuilder b)]) =>
-      (new DailyInfoBuilder()..update(updates)).build();
+  factory _$DailyInfoSearchResult(
+          [void updates(DailyInfoSearchResultBuilder b)]) =>
+      (new DailyInfoSearchResultBuilder()..update(updates)).build();
 
-  _$DailyInfo._(
+  _$DailyInfoSearchResult._(
       {this.copyright,
       this.date,
       this.explanation,
@@ -98,33 +105,35 @@ class _$DailyInfo extends DailyInfo {
       this.media_type})
       : super._() {
     if (copyright == null) {
-      throw new BuiltValueNullFieldError('DailyInfo', 'copyright');
+      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'copyright');
     }
     if (date == null) {
-      throw new BuiltValueNullFieldError('DailyInfo', 'date');
+      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'date');
     }
     if (explanation == null) {
-      throw new BuiltValueNullFieldError('DailyInfo', 'explanation');
+      throw new BuiltValueNullFieldError(
+          'DailyInfoSearchResult', 'explanation');
     }
     if (hdurl == null) {
-      throw new BuiltValueNullFieldError('DailyInfo', 'hdurl');
+      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'hdurl');
     }
     if (media_type == null) {
-      throw new BuiltValueNullFieldError('DailyInfo', 'media_type');
+      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'media_type');
     }
   }
 
   @override
-  DailyInfo rebuild(void updates(DailyInfoBuilder b)) =>
+  DailyInfoSearchResult rebuild(void updates(DailyInfoSearchResultBuilder b)) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DailyInfoBuilder toBuilder() => new DailyInfoBuilder()..replace(this);
+  DailyInfoSearchResultBuilder toBuilder() =>
+      new DailyInfoSearchResultBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is DailyInfo &&
+    return other is DailyInfoSearchResult &&
         copyright == other.copyright &&
         date == other.date &&
         explanation == other.explanation &&
@@ -144,7 +153,7 @@ class _$DailyInfo extends DailyInfo {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('DailyInfo')
+    return (newBuiltValueToStringHelper('DailyInfoSearchResult')
           ..add('copyright', copyright)
           ..add('date', date)
           ..add('explanation', explanation)
@@ -154,8 +163,9 @@ class _$DailyInfo extends DailyInfo {
   }
 }
 
-class DailyInfoBuilder implements Builder<DailyInfo, DailyInfoBuilder> {
-  _$DailyInfo _$v;
+class DailyInfoSearchResultBuilder
+    implements Builder<DailyInfoSearchResult, DailyInfoSearchResultBuilder> {
+  _$DailyInfoSearchResult _$v;
 
   String _copyright;
   String get copyright => _$this._copyright;
@@ -177,9 +187,9 @@ class DailyInfoBuilder implements Builder<DailyInfo, DailyInfoBuilder> {
   String get media_type => _$this._media_type;
   set media_type(String media_type) => _$this._media_type = media_type;
 
-  DailyInfoBuilder();
+  DailyInfoSearchResultBuilder();
 
-  DailyInfoBuilder get _$this {
+  DailyInfoSearchResultBuilder get _$this {
     if (_$v != null) {
       _copyright = _$v.copyright;
       _date = _$v.date;
@@ -192,22 +202,22 @@ class DailyInfoBuilder implements Builder<DailyInfo, DailyInfoBuilder> {
   }
 
   @override
-  void replace(DailyInfo other) {
+  void replace(DailyInfoSearchResult other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$DailyInfo;
+    _$v = other as _$DailyInfoSearchResult;
   }
 
   @override
-  void update(void updates(DailyInfoBuilder b)) {
+  void update(void updates(DailyInfoSearchResultBuilder b)) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$DailyInfo build() {
+  _$DailyInfoSearchResult build() {
     final _$result = _$v ??
-        new _$DailyInfo._(
+        new _$DailyInfoSearchResult._(
             copyright: copyright,
             date: date,
             explanation: explanation,
