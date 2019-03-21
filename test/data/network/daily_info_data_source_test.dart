@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dart_space/data/model/daily_info/daily_info_search_error.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'package:dart_space/data/network/daily_info_data_source.dart';
 import 'package:mockito/mockito.dart';
@@ -62,7 +63,7 @@ void main() {
 
       expect(
         () => dataSource.searchDailyInfo('323131'),
-        throwsA(TypeMatcher<DailyInfoSearchResult>()),
+        throwsA(TypeMatcher<DailyInfoSearchError>()),
       );
   }
   );
