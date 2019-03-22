@@ -6,31 +6,33 @@ part of search_event;
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$DateSearchEvent extends DateSearchEvent {
+class _$DateInitialSearchEvent extends DateInitialSearchEvent {
   @override
-  final String date;
+  final DateTime date;
 
-  factory _$DateSearchEvent([void updates(DateSearchEventBuilder b)]) =>
-      (new DateSearchEventBuilder()..update(updates)).build();
+  factory _$DateInitialSearchEvent(
+          [void updates(DateInitialSearchEventBuilder b)]) =>
+      (new DateInitialSearchEventBuilder()..update(updates)).build();
 
-  _$DateSearchEvent._({this.date}) : super._() {
+  _$DateInitialSearchEvent._({this.date}) : super._() {
     if (date == null) {
-      throw new BuiltValueNullFieldError('DateSearchEvent', 'date');
+      throw new BuiltValueNullFieldError('DateInitialSearchEvent', 'date');
     }
   }
 
   @override
-  DateSearchEvent rebuild(void updates(DateSearchEventBuilder b)) =>
+  DateInitialSearchEvent rebuild(
+          void updates(DateInitialSearchEventBuilder b)) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DateSearchEventBuilder toBuilder() =>
-      new DateSearchEventBuilder()..replace(this);
+  DateInitialSearchEventBuilder toBuilder() =>
+      new DateInitialSearchEventBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is DateSearchEvent && date == other.date;
+    return other is DateInitialSearchEvent && date == other.date;
   }
 
   @override
@@ -40,22 +42,23 @@ class _$DateSearchEvent extends DateSearchEvent {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('DateSearchEvent')..add('date', date))
+    return (newBuiltValueToStringHelper('DateInitialSearchEvent')
+          ..add('date', date))
         .toString();
   }
 }
 
-class DateSearchEventBuilder
-    implements Builder<DateSearchEvent, DateSearchEventBuilder> {
-  _$DateSearchEvent _$v;
+class DateInitialSearchEventBuilder
+    implements Builder<DateInitialSearchEvent, DateInitialSearchEventBuilder> {
+  _$DateInitialSearchEvent _$v;
 
-  String _date;
-  String get date => _$this._date;
-  set date(String date) => _$this._date = date;
+  DateTime _date;
+  DateTime get date => _$this._date;
+  set date(DateTime date) => _$this._date = date;
 
-  DateSearchEventBuilder();
+  DateInitialSearchEventBuilder();
 
-  DateSearchEventBuilder get _$this {
+  DateInitialSearchEventBuilder get _$this {
     if (_$v != null) {
       _date = _$v.date;
       _$v = null;
@@ -64,21 +67,100 @@ class DateSearchEventBuilder
   }
 
   @override
-  void replace(DateSearchEvent other) {
+  void replace(DateInitialSearchEvent other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$DateSearchEvent;
+    _$v = other as _$DateInitialSearchEvent;
   }
 
   @override
-  void update(void updates(DateSearchEventBuilder b)) {
+  void update(void updates(DateInitialSearchEventBuilder b)) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$DateSearchEvent build() {
-    final _$result = _$v ?? new _$DateSearchEvent._(date: date);
+  _$DateInitialSearchEvent build() {
+    final _$result = _$v ?? new _$DateInitialSearchEvent._(date: date);
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$DateNextSearchEvent extends DateNextSearchEvent {
+  @override
+  final DateTime date;
+
+  factory _$DateNextSearchEvent([void updates(DateNextSearchEventBuilder b)]) =>
+      (new DateNextSearchEventBuilder()..update(updates)).build();
+
+  _$DateNextSearchEvent._({this.date}) : super._() {
+    if (date == null) {
+      throw new BuiltValueNullFieldError('DateNextSearchEvent', 'date');
+    }
+  }
+
+  @override
+  DateNextSearchEvent rebuild(void updates(DateNextSearchEventBuilder b)) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  DateNextSearchEventBuilder toBuilder() =>
+      new DateNextSearchEventBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is DateNextSearchEvent && date == other.date;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(0, date.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('DateNextSearchEvent')
+          ..add('date', date))
+        .toString();
+  }
+}
+
+class DateNextSearchEventBuilder
+    implements Builder<DateNextSearchEvent, DateNextSearchEventBuilder> {
+  _$DateNextSearchEvent _$v;
+
+  DateTime _date;
+  DateTime get date => _$this._date;
+  set date(DateTime date) => _$this._date = date;
+
+  DateNextSearchEventBuilder();
+
+  DateNextSearchEventBuilder get _$this {
+    if (_$v != null) {
+      _date = _$v.date;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(DateNextSearchEvent other) {
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
+    _$v = other as _$DateNextSearchEvent;
+  }
+
+  @override
+  void update(void updates(DateNextSearchEventBuilder b)) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$DateNextSearchEvent build() {
+    final _$result = _$v ?? new _$DateNextSearchEvent._(date: date);
     replace(_$result);
     return _$result;
   }

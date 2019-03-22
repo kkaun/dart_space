@@ -15,17 +15,17 @@ class DailyInfoDataSource {
 
   DailyInfoDataSource(this.client);
 
-  Future<DailyInfoSearchResult> searchDailyInfo(String date,
-  ) async {
-    final urlRaw = _searchBaseUrl + '&date=$date';
+  Future<DailyInfoSearchResult> searchDailyInfo(
+    String date,) async {
+      final urlRaw = _searchBaseUrl + '&date=$date';
 
-    final urlEncoded = Uri.encodeFull(urlRaw);
-    final response = await client.get(urlEncoded);
+      final urlEncoded = Uri.encodeFull(urlRaw);
+      final response = await client.get(urlEncoded);
 
-    if (response.statusCode == 200) {
-      return DailyInfoSearchResult.fromJson(response.body);
-    } else {
-      throw DailyInfoSearchError(json.decode(response.body)['msg']);
-    }
+      if (response.statusCode == 200) {
+        return DailyInfoSearchResult.fromJson(response.body);
+      } else {
+        throw DailyInfoSearchError(json.decode(response.body)['msg']);
+      }
   }
 }

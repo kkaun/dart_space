@@ -1,35 +1,33 @@
 
-import 'package:built_collection/built_collection.dart';
-
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'package:dart_space/data/network/daily_info_data_source.dart';
+import 'package:dart_space/utils.dart';
 
 class DailyInfoRepository {
 
   DailyInfoDataSource _dailyInfoDataSource;
 
-  //String _lastSearchQuery;
-  //String _nextPageToken;
+  DateTime currentSearchDate;
 
-  String currentSearchDate;
-
+  static List<DailyInfoSearchResult> cachedResponses;
 
   DailyInfoRepository(this._dailyInfoDataSource);
 
-  Future<DailyInfoSearchResult> searchNextDailyInfo(String query) async {
-    final searchResult = await _dailyInfoDataSource.searchVideos(query: query);
-    _cacheValues(query: query, nextPageToken: searchResult.nextPageToken);
-    if (searchResult.items.isEmpty) throw NoSearchResultsException();
-    return searchResult.items;
+  Future<DailyInfoSearchResult> searchDailyInfo(DateTime currentDate, bool clearCache) async {
+    final searchResult = await _dailyInfoDataSource.searchDailyInfo(baseFormatter.format(currentDate));
+    currentSearchDate = currentDate;
+    if(clearCache) _clearCacheSearchResults(); 
+    else _cacheSearchResult(searchResult);
+    return searchResult;
   }
 
-  void _cacheValues({String query, String nextPageToken}) {
-    _lastSearchQuery = query;
-    _nextPageToken = nextPageToken;
+  void _cacheSearchResult(DailyInfoSearchResult searchResult) {
+    cachedResponses.add(searchResult);
   }
 
-  
-  
+  void _clearCacheSearchResults() {
+    cachedResponses = List<DailyInfoSearchResult>();
+  }
 }
 
 class NoSearchResultsException implements Exception {

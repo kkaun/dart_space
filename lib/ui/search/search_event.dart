@@ -6,11 +6,22 @@ part 'search_event.g.dart';
 
 abstract class SearchEvent {}
 
-abstract class DateSearchEvent implements Built<DateSearchEvent, DateSearchEventBuilder> {
+abstract class DateInitialSearchEvent extends SearchEvent
+implements Built<DateInitialSearchEvent, DateInitialSearchEventBuilder> {
   // fields go here
-  String get date;
+  DateTime get date;
 
-  DateSearchEvent._();
+  DateInitialSearchEvent._();
 
-  factory DateSearchEvent([updates(DateSearchEventBuilder b)]) = _$DateSearchEvent;
+  factory DateInitialSearchEvent([updates(DateInitialSearchEventBuilder b)]) = _$DateInitialSearchEvent;
+}
+
+abstract class DateNextSearchEvent  extends SearchEvent
+implements Built<DateNextSearchEvent, DateNextSearchEventBuilder> {
+  // fields go here
+  DateTime get date;
+  
+  DateNextSearchEvent._();
+
+  factory DateNextSearchEvent([updates(DateNextSearchEventBuilder b)]) = _$DateNextSearchEvent;
 }

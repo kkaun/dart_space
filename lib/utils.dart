@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 const String BASE_DATE_FORMAT = 'yyyy-MM-dd';
 
-DateFormat baseFormatter = new DateFormat(BASE_DATE_FORMAT);
+final DateFormat baseFormatter = new DateFormat(BASE_DATE_FORMAT);
 
 String getFormattedStrFromDateTime(DateTime dateTime) => baseFormatter.format(dateTime);
 
@@ -19,3 +19,5 @@ String getNextFormattedDateStr(DateTime currentDateTime) {
     DateTime nextDate = currentDateTime.add(new Duration(days: 1));
     return baseFormatter.format(nextDate);
 }
+
+bool dateIsValid(DateTime date) => date.isBefore(DateTime(1995, 6, 17)) && date.isAfter(DateTime.now());

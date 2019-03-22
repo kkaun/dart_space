@@ -10,20 +10,20 @@ class _$SearchState extends SearchState {
   @override
   final bool isLoading;
   @override
-  final BuiltList<DailyInfoSearchResult> searchResults;
+  final DailyInfoSearchResult currentSearchResult;
   @override
   final String error;
 
   factory _$SearchState([void updates(SearchStateBuilder b)]) =>
       (new SearchStateBuilder()..update(updates)).build();
 
-  _$SearchState._({this.isLoading, this.searchResults, this.error})
+  _$SearchState._({this.isLoading, this.currentSearchResult, this.error})
       : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('SearchState', 'isLoading');
     }
-    if (searchResults == null) {
-      throw new BuiltValueNullFieldError('SearchState', 'searchResults');
+    if (currentSearchResult == null) {
+      throw new BuiltValueNullFieldError('SearchState', 'currentSearchResult');
     }
     if (error == null) {
       throw new BuiltValueNullFieldError('SearchState', 'error');
@@ -42,13 +42,14 @@ class _$SearchState extends SearchState {
     if (identical(other, this)) return true;
     return other is SearchState &&
         isLoading == other.isLoading &&
-        searchResults == other.searchResults &&
+        currentSearchResult == other.currentSearchResult &&
         error == other.error;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, isLoading.hashCode), searchResults.hashCode),
+    return $jf($jc(
+        $jc($jc(0, isLoading.hashCode), currentSearchResult.hashCode),
         error.hashCode));
   }
 
@@ -56,7 +57,7 @@ class _$SearchState extends SearchState {
   String toString() {
     return (newBuiltValueToStringHelper('SearchState')
           ..add('isLoading', isLoading)
-          ..add('searchResults', searchResults)
+          ..add('currentSearchResult', currentSearchResult)
           ..add('error', error))
         .toString();
   }
@@ -69,11 +70,11 @@ class SearchStateBuilder implements Builder<SearchState, SearchStateBuilder> {
   bool get isLoading => _$this._isLoading;
   set isLoading(bool isLoading) => _$this._isLoading = isLoading;
 
-  ListBuilder<DailyInfoSearchResult> _searchResults;
-  ListBuilder<DailyInfoSearchResult> get searchResults =>
-      _$this._searchResults ??= new ListBuilder<DailyInfoSearchResult>();
-  set searchResults(ListBuilder<DailyInfoSearchResult> searchResults) =>
-      _$this._searchResults = searchResults;
+  DailyInfoSearchResultBuilder _currentSearchResult;
+  DailyInfoSearchResultBuilder get currentSearchResult =>
+      _$this._currentSearchResult ??= new DailyInfoSearchResultBuilder();
+  set currentSearchResult(DailyInfoSearchResultBuilder currentSearchResult) =>
+      _$this._currentSearchResult = currentSearchResult;
 
   String _error;
   String get error => _$this._error;
@@ -84,7 +85,7 @@ class SearchStateBuilder implements Builder<SearchState, SearchStateBuilder> {
   SearchStateBuilder get _$this {
     if (_$v != null) {
       _isLoading = _$v.isLoading;
-      _searchResults = _$v.searchResults?.toBuilder();
+      _currentSearchResult = _$v.currentSearchResult?.toBuilder();
       _error = _$v.error;
       _$v = null;
     }
@@ -111,13 +112,13 @@ class SearchStateBuilder implements Builder<SearchState, SearchStateBuilder> {
       _$result = _$v ??
           new _$SearchState._(
               isLoading: isLoading,
-              searchResults: searchResults.build(),
+              currentSearchResult: currentSearchResult.build(),
               error: error);
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'searchResults';
-        searchResults.build();
+        _$failedField = 'currentSearchResult';
+        currentSearchResult.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'SearchState', _$failedField, e.toString());
