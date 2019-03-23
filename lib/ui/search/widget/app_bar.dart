@@ -14,7 +14,9 @@ class DailyInfoAppBar extends StatelessWidget {
         backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
-             icon: Icon(Icons.calendar_today),
+             icon: Icon(
+               Icons.calendar_today,
+               color: Colors.black,),
              tooltip: 'Open Calendar',
              onPressed: () => _selectDate(context),
           ),
@@ -39,9 +41,9 @@ class DailyInfoAppBar extends StatelessWidget {
   Future _selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
         context: context,
-        initialDate: new DateTime.now(),
-        firstDate: new DateTime(2016),
-        lastDate: new DateTime(2019)
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1995, 6, 17),
+        lastDate: DateTime.now()
     );
     //if(picked != null) setState(() => _value = picked.toString());  //SET DATE AS EVENT!?
   }

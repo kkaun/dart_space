@@ -16,7 +16,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   DateTime get currentDate;
   bool get isLoading;
 
-
   bool get isInitial => 
       !isLoading && searchResultList.isEmpty == null && error == '';
   bool get isSuccessful => 
@@ -30,6 +29,7 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   factory SearchState.initial() {
     return SearchState((b) => b
     ..isLoading = false
+    ..currentDate = DateTime.now()
     ..searchResultList.replace(List<DailyInfoSearchResult>())
     ..error = ''
     );
@@ -38,7 +38,7 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   factory SearchState.loading() {
     return SearchState((b) => b
       ..isLoading = true
-      //..searchResultList.replace(BuiltList<DailyInfoSearchResult>()) TODO?
+      ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
       ..error = '');
   }
 
@@ -55,5 +55,13 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
       ..currentDate = nextDate
       ..searchResultList.add(result)
       ..error = '');
+  }
+
+  DailyInfoSearchResult getSearchResultFor(int position) => searchResultList[position];
+
+  String getTextFor(DailyInfoSearchResult searchResult) {
+    final _dailyInfoExplanation = searchResult.explanation ?? "No Explanation provided";
+    final _dailyInfoCopyright = searchResult.copyright ?? "No Copyright info provided";
+    return _dailyInfoCopyright + '\n' + _dailyInfoExplanation;
   }
 }

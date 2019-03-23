@@ -11,13 +11,22 @@ part 'daily_info_search_result.g.dart';
 
 abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, DailyInfoSearchResultBuilder> {
   // fields go here
+  //TODO deal with possible nullables!
+  @nullable
   String get copyright;
+  @nullable
   String get date;
+  @nullable
   String get explanation;
+  @nullable
   String get hdurl;
+  @nullable
   String get media_type;
+  @nullable
   String get service_version;
+  @nullable
   String get title;
+  @nullable
   String get url;
 
   DailyInfoSearchResult._();

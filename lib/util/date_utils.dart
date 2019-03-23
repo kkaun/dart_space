@@ -1,5 +1,6 @@
 library utils;
 
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 const String BASE_DATE_FORMAT = 'yyyy-MM-dd';
@@ -15,4 +16,7 @@ DateTime getPreviousDateFrom(DateTime currentDateTime) => currentDateTime.subtra
 DateTime getNextDateFrom(DateTime currentDateTime) => currentDateTime.add(new Duration(days: 1));
 
 
-bool dateIsValid(DateTime date) => date.isBefore(DateTime(1995, 6, 17)) && date.isAfter(DateTime.now());
+bool dateIsValid(DateTime date) {
+  debugPrint(date.toString());
+  return date.isAfter(DateTime(1995, 6, 17)) && date.isBefore(DateTime(2019, 05, 24));
+}

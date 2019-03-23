@@ -11,7 +11,7 @@ class DailyInfoRepository {
 
   DailyInfoRepository(this._dailyInfoDataSource);
 
-  Future<DailyInfoSearchResult> searchDailyInfo(DateTime currentDate, bool clearCache) async {
+  Future<DailyInfoSearchResult> searchDailyInfo(DateTime currentDate) async {
     final searchResult = await _dailyInfoDataSource.searchDailyInfo(baseFormatter.format(currentDate));
     currentSearchDate = currentDate;
     return searchResult;

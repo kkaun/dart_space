@@ -1,11 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:dart_space/data/model/daily_info/daily_info_search_error.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'api_key.dart';
-
-const int MAX_SEARCH_RESULTS = 5;
 
 class DailyInfoDataSource {
 
@@ -21,6 +20,9 @@ class DailyInfoDataSource {
 
       final urlEncoded = Uri.encodeFull(urlRaw);
       final response = await client.get(urlEncoded);
+
+      debugPrint('IN DATA SOURCE!');
+      debugPrint(response.body);
 
       if (response.statusCode == 200) {
         return DailyInfoSearchResult.fromJson(response.body);
