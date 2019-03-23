@@ -3,7 +3,7 @@ import 'package:dart_space/data/repository/daily_info_repository.dart';
 import 'package:dart_space/ui/search/search_event.dart';
 import 'package:dart_space/ui/search/search_state.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_error.dart';
-import 'package:dart_space/utils.dart';
+import 'package:dart_space/util/date_utils.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
