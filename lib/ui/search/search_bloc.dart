@@ -44,7 +44,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         yield(SearchState.loading());
         try {
           final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date, true);
-          yield SearchState.success(searchResult);
+          yield SearchState.success(searchResult, event.date);
         } on DailyInfoSearchError catch(e) {
           yield SearchState.failure(e.message);
         } on NoSearchResultsException catch(e) {
@@ -59,7 +59,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield(SearchState.loading());
       try {
         final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date, false);
-        yield SearchState.success(searchResult);
+        yield SearchState.success(searchResult, event.date);
       } on DailyInfoSearchError catch(e) {
         yield SearchState.failure(e.message);
       } on NoSearchResultsException catch(e) {

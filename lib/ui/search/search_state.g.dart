@@ -8,25 +8,31 @@ part of search_state;
 
 class _$SearchState extends SearchState {
   @override
-  final bool isLoading;
-  @override
-  final DailyInfoSearchResult currentSearchResult;
+  final BuiltList<DailyInfoSearchResult> searchResultList;
   @override
   final String error;
+  @override
+  final DateTime currentDate;
+  @override
+  final bool isLoading;
 
   factory _$SearchState([void updates(SearchStateBuilder b)]) =>
       (new SearchStateBuilder()..update(updates)).build();
 
-  _$SearchState._({this.isLoading, this.currentSearchResult, this.error})
+  _$SearchState._(
+      {this.searchResultList, this.error, this.currentDate, this.isLoading})
       : super._() {
-    if (isLoading == null) {
-      throw new BuiltValueNullFieldError('SearchState', 'isLoading');
-    }
-    if (currentSearchResult == null) {
-      throw new BuiltValueNullFieldError('SearchState', 'currentSearchResult');
+    if (searchResultList == null) {
+      throw new BuiltValueNullFieldError('SearchState', 'searchResultList');
     }
     if (error == null) {
       throw new BuiltValueNullFieldError('SearchState', 'error');
+    }
+    if (currentDate == null) {
+      throw new BuiltValueNullFieldError('SearchState', 'currentDate');
+    }
+    if (isLoading == null) {
+      throw new BuiltValueNullFieldError('SearchState', 'isLoading');
     }
   }
 
@@ -41,24 +47,27 @@ class _$SearchState extends SearchState {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is SearchState &&
-        isLoading == other.isLoading &&
-        currentSearchResult == other.currentSearchResult &&
-        error == other.error;
+        searchResultList == other.searchResultList &&
+        error == other.error &&
+        currentDate == other.currentDate &&
+        isLoading == other.isLoading;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc(0, isLoading.hashCode), currentSearchResult.hashCode),
-        error.hashCode));
+        $jc($jc($jc(0, searchResultList.hashCode), error.hashCode),
+            currentDate.hashCode),
+        isLoading.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('SearchState')
-          ..add('isLoading', isLoading)
-          ..add('currentSearchResult', currentSearchResult)
-          ..add('error', error))
+          ..add('searchResultList', searchResultList)
+          ..add('error', error)
+          ..add('currentDate', currentDate)
+          ..add('isLoading', isLoading))
         .toString();
   }
 }
@@ -66,27 +75,32 @@ class _$SearchState extends SearchState {
 class SearchStateBuilder implements Builder<SearchState, SearchStateBuilder> {
   _$SearchState _$v;
 
-  bool _isLoading;
-  bool get isLoading => _$this._isLoading;
-  set isLoading(bool isLoading) => _$this._isLoading = isLoading;
-
-  DailyInfoSearchResultBuilder _currentSearchResult;
-  DailyInfoSearchResultBuilder get currentSearchResult =>
-      _$this._currentSearchResult ??= new DailyInfoSearchResultBuilder();
-  set currentSearchResult(DailyInfoSearchResultBuilder currentSearchResult) =>
-      _$this._currentSearchResult = currentSearchResult;
+  ListBuilder<DailyInfoSearchResult> _searchResultList;
+  ListBuilder<DailyInfoSearchResult> get searchResultList =>
+      _$this._searchResultList ??= new ListBuilder<DailyInfoSearchResult>();
+  set searchResultList(ListBuilder<DailyInfoSearchResult> searchResultList) =>
+      _$this._searchResultList = searchResultList;
 
   String _error;
   String get error => _$this._error;
   set error(String error) => _$this._error = error;
 
+  DateTime _currentDate;
+  DateTime get currentDate => _$this._currentDate;
+  set currentDate(DateTime currentDate) => _$this._currentDate = currentDate;
+
+  bool _isLoading;
+  bool get isLoading => _$this._isLoading;
+  set isLoading(bool isLoading) => _$this._isLoading = isLoading;
+
   SearchStateBuilder();
 
   SearchStateBuilder get _$this {
     if (_$v != null) {
-      _isLoading = _$v.isLoading;
-      _currentSearchResult = _$v.currentSearchResult?.toBuilder();
+      _searchResultList = _$v.searchResultList?.toBuilder();
       _error = _$v.error;
+      _currentDate = _$v.currentDate;
+      _isLoading = _$v.isLoading;
       _$v = null;
     }
     return this;
@@ -111,14 +125,15 @@ class SearchStateBuilder implements Builder<SearchState, SearchStateBuilder> {
     try {
       _$result = _$v ??
           new _$SearchState._(
-              isLoading: isLoading,
-              currentSearchResult: currentSearchResult.build(),
-              error: error);
+              searchResultList: searchResultList.build(),
+              error: error,
+              currentDate: currentDate,
+              isLoading: isLoading);
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'currentSearchResult';
-        currentSearchResult.build();
+        _$failedField = 'searchResultList';
+        searchResultList.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'SearchState', _$failedField, e.toString());

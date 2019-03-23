@@ -9,24 +9,12 @@ class DailyInfoRepository {
 
   DateTime currentSearchDate;
 
-  static List<DailyInfoSearchResult> cachedResponses;
-
   DailyInfoRepository(this._dailyInfoDataSource);
 
   Future<DailyInfoSearchResult> searchDailyInfo(DateTime currentDate, bool clearCache) async {
     final searchResult = await _dailyInfoDataSource.searchDailyInfo(baseFormatter.format(currentDate));
     currentSearchDate = currentDate;
-    if(clearCache) _clearCacheSearchResults(); 
-    else _cacheSearchResult(searchResult);
     return searchResult;
-  }
-
-  void _cacheSearchResult(DailyInfoSearchResult searchResult) {
-    cachedResponses.add(searchResult);
-  }
-
-  void _clearCacheSearchResults() {
-    cachedResponses = List<DailyInfoSearchResult>();
   }
 }
 

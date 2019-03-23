@@ -10,14 +10,9 @@ String getFormattedStrFromDateTime(DateTime dateTime) => baseFormatter.format(da
 
 String getTodayDateFormattedStr() => baseFormatter.format(DateTime.now());
 
-String getPreviousFormattedDateStr(DateTime currentDateTime) {
-    DateTime prevDate = currentDateTime.subtract(new Duration(days: 1));
-    return baseFormatter.format(prevDate);
-}
+DateTime getPreviousDateFrom(DateTime currentDateTime) => currentDateTime.subtract(new Duration(days: 1));
 
-String getNextFormattedDateStr(DateTime currentDateTime) {
-    DateTime nextDate = currentDateTime.add(new Duration(days: 1));
-    return baseFormatter.format(nextDate);
-}
+DateTime getNextDateFrom(DateTime currentDateTime) => currentDateTime.add(new Duration(days: 1));
+
 
 bool dateIsValid(DateTime date) => date.isBefore(DateTime(1995, 6, 17)) && date.isAfter(DateTime.now());
