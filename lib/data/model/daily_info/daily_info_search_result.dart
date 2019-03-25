@@ -6,6 +6,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dart_space/data/serializers/serializers.dart';
+import 'package:dart_space/util/model_utils.dart';
 
 part 'daily_info_search_result.g.dart';
 
@@ -33,6 +34,14 @@ abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, Dai
   DailyInfoSearchResult._();
 
   factory DailyInfoSearchResult([updates(DailyInfoSearchResultBuilder b)]) = _$DailyInfoSearchResult;
+
+  String getMediaContentUrl() {
+    final mediaUrl = url ?? "";
+    if(mediaUrl.contains("https://www.youtube.com/embed/")) {
+      final embedParams = mediaUrl.substring(mediaUrl.lastIndexOf("/"));
+      return YOUTUBE_THUMBNAIL_PREFIX + embedParams.substring(1, embedParams.indexOf("?")) + YOUTUBE_THUMBNAIL_SUFFIX;
+    } else return mediaUrl;
+  }
 
   String toJson() {
     return json.encode(serializers.serializeWith(DailyInfoSearchResult.serializer, this));

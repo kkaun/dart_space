@@ -15,15 +15,20 @@ class DailyInfoPage extends StatefulWidget {
   _DailyInfoPageState createState() => _DailyInfoPageState();
 }
 
-class _DailyInfoPageState extends State<DailyInfoPage> {
+class _DailyInfoPageState extends State<DailyInfoPage> with 
+                  AutomaticKeepAliveClientMixin<DailyInfoPage> {
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  final _pageController = PageController();
+  //final _pageController = PageController();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     _searchBloc.onSwipeSearchInitiated();
     return BlocProvider(
       bloc: _searchBloc,
@@ -46,12 +51,14 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
             );
           }
           if(state.isLoading) {
+            debugPrint("UI-------------LOADING!");
             return Center(
               child: CircularProgressIndicator()
             );
           }
           if(state.isSuccessful) {
-            return _buildResultViewPage(state);
+            debugPrint("UI-------------SUCCESS!");
+            return _buildItemDependingOnState(state);
           } else { //error
             return CenteredMessage(
               message: state.error,
@@ -63,17 +70,10 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
     );
   }
 
-
-  Widget _buildResultViewPage(SearchState searchState) {
-    return buildItemDependingOnState(searchState);
-  }
-
-
-  Widget buildItemDependingOnState(SearchState searchState) {
+  Widget _buildItemDependingOnState(SearchState searchState) {
     debugPrint("buildItemDependingOnState - results length: ${searchState.searchResultList.length}");
     return searchState.searchResultList.length <= 0 ? _buildLoaderListItem() : _buildPageView(searchState);
   }
-
 
   Widget _buildLoaderListItem() {
     return Center(
@@ -81,33 +81,40 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
     );
   }
 
-
   Widget _buildPageView(SearchState searchState) {
     return PageView.builder(
       onPageChanged: (pageIndex) {
-        _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
-      },
-      controller: _pageController,
-      scrollDirection: Axis.horizontal,
-      //itemCount: searchState.getResultCount() + 1,
-      itemBuilder: (context, position) {
-        debugPrint("--------------- PAGE POSITION : $position");
-        debugPrint("--------------- LAST RESULT INDEX: ${searchState.getLastResultIndex()}");
-        //debugPrint("-------------------CURRENT RESULTS : ${searchState.searchResultList.toString()}");
-        debugPrint("----------------------- CURRENT RESULTS SIZE: ${searchState.searchResultList.length}");
-        if(searchState.getLastResultIndex() == position) {
-          return _buildPage(true, position, searchState);
-        } else {
-          return _buildPage(false, position, searchState);
+        debugPrint("============ON PAGE CHANGED!!!!!!!!!!!");
+        if(pageIndex == (searchState.getLastResultIndex() + 1)) {
+          debugPrint("============   pageIndex > searchState.getLastResultIndex()");
+          _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
         }
+      },
+      //controller: _pageController,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, position) {
+          return _buildPage(position, searchState);
       },
     );
   }
 
+  Widget _buildPage(int pageViewPosition, SearchState searchState) {
+    
+    var searchResult;
+    
+    try {
+      if(searchState.getLastResultIndex() < pageViewPosition) { 
+        return _buildLoaderListItem();
+      }
+      else { 
+        searchResult = searchState.getSearchResultFor(pageViewPosition);
+      }
+    } on RangeError {
+      return _buildLoaderListItem();
+    }
+      debugPrint("URL : ${searchResult?.url ?? ""}");
+      debugPrint("FINAL Media URL : ${searchResult?.getMediaContentUrl()}");
 
-  Widget _buildPage(bool isCurrentPageDataReady, int pageViewPosition, SearchState searchState) {
-    if(isCurrentPageDataReady) {
-      final searchResult = searchState.getSearchResultFor(pageViewPosition);
       return Stack(
         children: [
           Container(
@@ -119,14 +126,14 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
                 Flexible(
                   flex: 8,
                   child: CachedNetworkImage(
-                    imageUrl: searchResult.hdurl ?? searchResult.url ?? "",
+                    imageUrl: searchResult?.getMediaContentUrl(),
                     placeholder: (context, url) => CircularProgressIndicator(),
                     errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
                   ),
                 ),
                 Flexible(
                   flex: 2,
-                  child: Text(searchResult.title ?? "Title not present",     
+                  child: Text(searchResult?.title ?? "Title not present",     
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16.0, 
@@ -153,19 +160,9 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
           ),
         ],
       );
-    } else {
-      return _buildLoaderListItem();
-    }
+    
   }
 
-
-  // bool _handleScrollNotification(ScrollNotification notification, SearchState state) {
-  //   if(notification is ScrollEndNotification) {
-  //     debugPrint("SCROLL END NOTIFACATION");
-  //     _searchBloc.fetchNextSwipePage(getPreviousDateFrom(state.currentDate));
-  //   }
-  //   return false;
-  // }
 
   @override
   void dispose() {
