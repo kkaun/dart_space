@@ -18,7 +18,7 @@ class DailyInfoPage extends StatefulWidget {
 class _DailyInfoPageState extends State<DailyInfoPage> {
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  //var _counter = 0;
+  final _pageController = PageController();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -40,23 +40,19 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
         bloc: _searchBloc,
         builder: (context, SearchState state) {
           if(state.isInitial) {
-            debugPrint('_buildScaffold() - INITIAL');
             return CenteredMessage(
               message: 'Start searching!',
               iconData: Icons.ondemand_video
             );
           }
           if(state.isLoading) {
-            debugPrint('_buildScaffold() - LOADING');
             return Center(
               child: CircularProgressIndicator()
             );
           }
           if(state.isSuccessful) {
-            debugPrint('_buildScaffold() - SUCCESS');
             return _buildResultViewPage(state);
           } else { //error
-            debugPrint('_buildScaffold() - ERROR');
             return CenteredMessage(
               message: state.error,
               iconData: Icons.error_outline,
@@ -67,38 +63,52 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
     );
   }
 
+
   Widget _buildResultViewPage(SearchState searchState) {
     return buildItemDependingOnState(searchState);
   }
 
 
   Widget buildItemDependingOnState(SearchState searchState) {
-    debugPrint("buildItemDependingOnState()");
-    //debugPrint('COUNTER  : $counter');
-    debugPrint('CURRENT RESULT LIST LENGTH: ${searchState.searchResultList.length}');
-    return _buildDailyItemCard(searchState);
+    debugPrint("buildItemDependingOnState - results length: ${searchState.searchResultList.length}");
+    return searchState.searchResultList.length <= 0 ? _buildLoaderListItem() : _buildPageView(searchState);
   }
 
 
-  Widget _buildLoaderListItem(SearchState searchState) {
-    return Container(
-      foregroundDecoration: BoxDecoration(
-                color: Color.fromRGBO(155, 85, 250, 0.4)),
-      child: Center(
-        child: CircularProgressIndicator(),
-      )
+  Widget _buildLoaderListItem() {
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
 
-  Widget _buildDailyItemCard(SearchState searchState) {
-      var searchResult = searchState.getSearchResultFor(searchState.searchResultList.length - 1);
-      return GestureDetector(
-        onHorizontalDragEnd: (details) {
-          debugPrint("DOWN GESTURE __PAGE__ DETAILS: $details");
-         _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
-        },
-        child: Stack(
+  Widget _buildPageView(SearchState searchState) {
+    return PageView.builder(
+      onPageChanged: (pageIndex) {
+        _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
+      },
+      controller: _pageController,
+      scrollDirection: Axis.horizontal,
+      //itemCount: searchState.getResultCount() + 1,
+      itemBuilder: (context, position) {
+        debugPrint("--------------- PAGE POSITION : $position");
+        debugPrint("--------------- LAST RESULT INDEX: ${searchState.getLastResultIndex()}");
+        //debugPrint("-------------------CURRENT RESULTS : ${searchState.searchResultList.toString()}");
+        debugPrint("----------------------- CURRENT RESULTS SIZE: ${searchState.searchResultList.length}");
+        if(searchState.getLastResultIndex() == position) {
+          return _buildPage(true, position, searchState);
+        } else {
+          return _buildPage(false, position, searchState);
+        }
+      },
+    );
+  }
+
+
+  Widget _buildPage(bool isCurrentPageDataReady, int pageViewPosition, SearchState searchState) {
+    if(isCurrentPageDataReady) {
+      final searchResult = searchState.getSearchResultFor(pageViewPosition);
+      return Stack(
         children: [
           Container(
             width: double.infinity,
@@ -138,22 +148,22 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
               ],
             ),
             decoration: BoxDecoration(
-              gradient: gradients[searchState.searchResultList.length - 1 % gradients.length],
+              gradient: gradients[pageViewPosition % gradients.length],
             ),
           ),
         ],
-      ),
-    );
-      
+      );
+    } else {
+      return _buildLoaderListItem();
+    }
   }
 
-  // //NOTIFICATION LISTENTER NOT WORKING AFTER FIRST SUCCESS. MB need full-size page container first?
+
   // bool _handleScrollNotification(ScrollNotification notification, SearchState state) {
-  //   //if(notification is ScrollEndNotification) {
-  //     debugPrint("SCROLL END NOTIFICATION");
-  //     counter = state.searchResultList.length + 1;
+  //   if(notification is ScrollEndNotification) {
+  //     debugPrint("SCROLL END NOTIFACATION");
   //     _searchBloc.fetchNextSwipePage(getPreviousDateFrom(state.currentDate));
-  //   //}
+  //   }
   //   return false;
   // }
 

@@ -53,16 +53,14 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
       ..error = error);
   }
 
-  factory SearchState.success(DailyInfoSearchResult result, DateTime nextDate) {
-    print('STATE ---------------- success()');
+  factory SearchState.success(List<DailyInfoSearchResult> resultList, DateTime nextDate) {
+    print('STATE ---------------- success(), SEARCH RESULTS SIZE : ${resultList.length}');
     return SearchState((b) => b
       ..isLoading = false
       ..currentDate = nextDate
-      ..searchResultList.add(result)
+      ..searchResultList.replace(resultList)
       ..error = '');
   }
-
-  
 
   DailyInfoSearchResult getSearchResultFor(int position) => searchResultList[position];
 
@@ -71,4 +69,8 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
     final _dailyInfoCopyright = searchResult.copyright ?? "No Copyright info provided";
     return _dailyInfoCopyright + '\n' + _dailyInfoExplanation;
   }
+
+  int getResultCount() => searchResultList.length;
+
+  int getLastResultIndex() => searchResultList.length - 1;
 }

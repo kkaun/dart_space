@@ -21,9 +21,6 @@ class DailyInfoDataSource {
       final urlEncoded = Uri.encodeFull(urlRaw);
       final response = await client.get(urlEncoded);
 
-      debugPrint('IN DATA SOURCE!');
-      debugPrint(response.body);
-
       if (response.statusCode == 200) {
         return DailyInfoSearchResult.fromJson(response.body);
       } else {

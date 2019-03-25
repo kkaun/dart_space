@@ -41,19 +41,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> mapInitialDailySearch(DateInitialSearchEvent event) async* {
-    debugPrint('IN BLOC - mapInitialDailySearch()!');
     if(event.date == null) {
-      debugPrint('IN BLOC - date is null!');
       yield(SearchState.initial());
     } else {
-      debugPrint('IN BLOC - date is NOT null!');
       if(dateIsValid(event.date)) {
-        debugPrint('IN BLOC - date is valid!');
         yield(SearchState.loading());
         try {
           debugPrint('try/catch after SearchState.loading()');
-          final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date);
-          yield SearchState.success(searchResult, event.date);
+          final searchResults = await _dailyInfoRepository.searchDailyInfo(false, event.date);
+          yield SearchState.success(searchResults, event.date);
         } on DailyInfoSearchError catch(e) {
           yield SearchState.failure(e.message);
         } on NoSearchResultsException catch(e) {
@@ -66,8 +62,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Stream<SearchState> mapNextDailySearch(DateNextSearchEvent event) async* {
     if(dateIsValid(event.date)) {
       try {
-        final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date);
-        yield SearchState.success(searchResult, event.date);
+        debugPrint("_____________IN mapNextDailySearch()");
+        final searchResults = await _dailyInfoRepository.searchDailyInfo(false, event.date);
+        yield SearchState.success(searchResults, event.date);
       } on DailyInfoSearchError catch(e) {
         yield SearchState.failure(e.message);
       } on NoSearchResultsException catch(e) {
