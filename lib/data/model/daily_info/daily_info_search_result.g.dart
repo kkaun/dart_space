@@ -22,30 +22,55 @@ class _$DailyInfoSearchResultSerializer
   @override
   Iterable serialize(Serializers serializers, DailyInfoSearchResult object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
-      'copyright',
-      serializers.serialize(object.copyright,
-          specifiedType: const FullType(String)),
-      'date',
-      serializers.serialize(object.date, specifiedType: const FullType(String)),
-      'explanation',
-      serializers.serialize(object.explanation,
-          specifiedType: const FullType(String)),
-      'hdurl',
-      serializers.serialize(object.hdurl,
-          specifiedType: const FullType(String)),
-      'media_type',
-      serializers.serialize(object.media_type,
-          specifiedType: const FullType(String)),
-      'service_version',
-      serializers.serialize(object.service_version,
-          specifiedType: const FullType(String)),
-      'title',
-      serializers.serialize(object.title,
-          specifiedType: const FullType(String)),
-      'url',
-      serializers.serialize(object.url, specifiedType: const FullType(String)),
-    ];
+    final result = <Object>[];
+    if (object.copyright != null) {
+      result
+        ..add('copyright')
+        ..add(serializers.serialize(object.copyright,
+            specifiedType: const FullType(String)));
+    }
+    if (object.date != null) {
+      result
+        ..add('date')
+        ..add(serializers.serialize(object.date,
+            specifiedType: const FullType(String)));
+    }
+    if (object.explanation != null) {
+      result
+        ..add('explanation')
+        ..add(serializers.serialize(object.explanation,
+            specifiedType: const FullType(String)));
+    }
+    if (object.hdurl != null) {
+      result
+        ..add('hdurl')
+        ..add(serializers.serialize(object.hdurl,
+            specifiedType: const FullType(String)));
+    }
+    if (object.media_type != null) {
+      result
+        ..add('media_type')
+        ..add(serializers.serialize(object.media_type,
+            specifiedType: const FullType(String)));
+    }
+    if (object.service_version != null) {
+      result
+        ..add('service_version')
+        ..add(serializers.serialize(object.service_version,
+            specifiedType: const FullType(String)));
+    }
+    if (object.title != null) {
+      result
+        ..add('title')
+        ..add(serializers.serialize(object.title,
+            specifiedType: const FullType(String)));
+    }
+    if (object.url != null) {
+      result
+        ..add('url')
+        ..add(serializers.serialize(object.url,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -132,34 +157,7 @@ class _$DailyInfoSearchResult extends DailyInfoSearchResult {
       this.service_version,
       this.title,
       this.url})
-      : super._() {
-    if (copyright == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'copyright');
-    }
-    if (date == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'date');
-    }
-    if (explanation == null) {
-      throw new BuiltValueNullFieldError(
-          'DailyInfoSearchResult', 'explanation');
-    }
-    if (hdurl == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'hdurl');
-    }
-    if (media_type == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'media_type');
-    }
-    if (service_version == null) {
-      throw new BuiltValueNullFieldError(
-          'DailyInfoSearchResult', 'service_version');
-    }
-    if (title == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'title');
-    }
-    if (url == null) {
-      throw new BuiltValueNullFieldError('DailyInfoSearchResult', 'url');
-    }
-  }
+      : super._();
 
   @override
   DailyInfoSearchResult rebuild(void updates(DailyInfoSearchResultBuilder b)) =>

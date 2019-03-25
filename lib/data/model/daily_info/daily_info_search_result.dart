@@ -13,6 +13,7 @@ abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, Dai
   // fields go here
   //TODO deal with possible nullables!
   @nullable
+  @BuiltValueField(wireName: 'copyright')
   String get copyright;
   @nullable
   String get date;

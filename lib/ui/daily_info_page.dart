@@ -18,7 +18,7 @@ class DailyInfoPage extends StatefulWidget {
 class _DailyInfoPageState extends State<DailyInfoPage> {
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  final _pageController = PageController();
+  var counter = 1;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -40,20 +40,23 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
         bloc: _searchBloc,
         builder: (context, SearchState state) {
           if(state.isInitial) {
+            debugPrint('_buildScaffold() - INITIAL');
             return CenteredMessage(
               message: 'Start searching!',
               iconData: Icons.ondemand_video
             );
           }
           if(state.isLoading) {
+            debugPrint('_buildScaffold() - LOADING');
             return Center(
               child: CircularProgressIndicator()
             );
           }
           if(state.isSuccessful) {
-            ///return Text(state.currentDate.toString());
+            debugPrint('_buildScaffold() - SUCCESS');
             return _buildResultViewPage(state);
           } else { //error
+            debugPrint('_buildScaffold() - ERROR');
             return CenteredMessage(
               message: state.error,
               iconData: Icons.error_outline,
@@ -64,70 +67,82 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
     );
   }
 
-
   Widget _buildResultViewPage(SearchState searchState) {
     return NotificationListener<ScrollNotification>(
       onNotification: (n) => _handleScrollNotification(n, searchState),
-      child: PageView.builder(
-        controller: _pageController,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, position) {
-          debugPrint("--------------- PAGE POSITION : $position");
-          final searchResult = searchState.getSearchResultFor(position);
-          return Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[       
-                    Flexible(
-                      flex: 8,
-                      child: CachedNetworkImage(
-                        imageUrl: searchResult.hdurl ?? searchResult.url ?? "",
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Text(searchResult.title ?? "Title not present",     
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.0, 
-                            color: Colors.black,
-                          ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: SingleChildScrollView(
-                        child: Text(searchState.getTextFor(searchResult),
-                          style: TextStyle(
-                            fontSize: 14.0, 
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  gradient: gradients[position % gradients.length],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+      child: buildItemDependingOnState(counter, searchState),
     );
   }
 
+
+  Widget buildItemDependingOnState(int counter, SearchState searchState) {
+    return counter >= searchState.searchResultList.length ? 
+          _buildLoaderListItem() : _buildDailyItemCard(searchState, counter);
+  }
+
+
+  Widget _buildLoaderListItem() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+
+  Stack _buildDailyItemCard(SearchState searchState, int position) {
+      var searchResult = searchState.getSearchResultFor(position);
+      return Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[       
+                Flexible(
+                  flex: 8,
+                  child: CachedNetworkImage(
+                    imageUrl: searchResult.hdurl ?? searchResult.url ?? "",
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Text(searchResult.title ?? "Title not present",     
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.0, 
+                        color: Colors.black,
+                      ),
+                  ),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: SingleChildScrollView(
+                    child: Text(searchState.getTextFor(searchResult),
+                      style: TextStyle(
+                        fontSize: 14.0, 
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              gradient: gradients[position % gradients.length],
+            ),
+          ),
+        ],
+      );
+  }
+
+  //NOTIFICATION LISTENTER NOT WORKING AFTER FIRST SUCCESS
   bool _handleScrollNotification(ScrollNotification notification, SearchState state) {
     if(notification is ScrollEndNotification) {
-      debugPrint("SCROLL END NOTIFACATION");
-      _searchBloc.fetchNextSwipePage(getNextDateFrom(state.currentDate));
+      debugPrint("SCROLL END NOTIFICATION");
+      counter = state.searchResultList.length + 1;
+      _searchBloc.fetchNextSwipePage(getPreviousDateFrom(state.currentDate));
     }
     return false;
   }

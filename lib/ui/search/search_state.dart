@@ -17,7 +17,7 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   bool get isLoading;
 
   bool get isInitial => 
-      !isLoading && searchResultList.isEmpty == null && error == '';
+      isLoading && searchResultList.isEmpty == null && error == '';
   bool get isSuccessful => 
       !isLoading && searchResultList.isNotEmpty != null && error == '';
 
@@ -27,6 +27,7 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
 
   //Called when initially launching the app
   factory SearchState.initial() {
+    print('STATE ---------------- initial()');
     return SearchState((b) => b
     ..isLoading = false
     ..currentDate = DateTime.now()
@@ -36,13 +37,16 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   factory SearchState.loading() {
+    print('STATE ---------------- loading()');
     return SearchState((b) => b
       ..isLoading = true
+      ..currentDate = DateTime.now()
       ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
       ..error = '');
   }
 
   factory SearchState.failure(String error) {
+    print('STATE ---------------- failure()');
     return SearchState((b) => b
       ..isLoading = false
       ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
@@ -50,6 +54,7 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   factory SearchState.success(DailyInfoSearchResult result, DateTime nextDate) {
+    print('STATE ---------------- success()');
     return SearchState((b) => b
       ..isLoading = false
       ..currentDate = nextDate

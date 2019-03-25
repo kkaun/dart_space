@@ -49,7 +49,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       debugPrint('IN BLOC - date is NOT null!');
       if(dateIsValid(event.date)) {
         debugPrint('IN BLOC - date is valid!');
-        //yield(SearchState.loading());
+        yield(SearchState.loading());
         try {
           debugPrint('try/catch after SearchState.loading()');
           final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date);
@@ -59,13 +59,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         } on NoSearchResultsException catch(e) {
           yield SearchState.failure(e.message);
         }
-      }
+      } else yield SearchState.failure('Date is not valid!');
     }
   }
 
   Stream<SearchState> mapNextDailySearch(DateNextSearchEvent event) async* {
     if(dateIsValid(event.date)) {
-      yield(SearchState.loading());
       try {
         final searchResult = await _dailyInfoRepository.searchDailyInfo(event.date);
         yield SearchState.success(searchResult, event.date);
@@ -74,6 +73,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       } on NoSearchResultsException catch(e) {
         yield SearchState.failure(e.message);
       }
-    }
+    } else yield SearchState.failure('Date is not valid!');
   }
 }
