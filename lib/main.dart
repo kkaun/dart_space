@@ -15,7 +15,7 @@ class DartSpaceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lime',
+      title: 'NASA APOD',
       theme: ThemeData(
         canvasColor: Colors.primaries[6],
       ),
