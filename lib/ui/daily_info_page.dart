@@ -18,7 +18,7 @@ class DailyInfoPage extends StatefulWidget {
 class _DailyInfoPageState extends State<DailyInfoPage> {
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  var counter = 1;
+  //var _counter = 0;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -68,29 +68,37 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
   }
 
   Widget _buildResultViewPage(SearchState searchState) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (n) => _handleScrollNotification(n, searchState),
-      child: buildItemDependingOnState(counter, searchState),
+    return buildItemDependingOnState(searchState);
+  }
+
+
+  Widget buildItemDependingOnState(SearchState searchState) {
+    debugPrint("buildItemDependingOnState()");
+    //debugPrint('COUNTER  : $counter');
+    debugPrint('CURRENT RESULT LIST LENGTH: ${searchState.searchResultList.length}');
+    return _buildDailyItemCard(searchState);
+  }
+
+
+  Widget _buildLoaderListItem(SearchState searchState) {
+    return Container(
+      foregroundDecoration: BoxDecoration(
+                color: Color.fromRGBO(155, 85, 250, 0.4)),
+      child: Center(
+        child: CircularProgressIndicator(),
+      )
     );
   }
 
 
-  Widget buildItemDependingOnState(int counter, SearchState searchState) {
-    return counter >= searchState.searchResultList.length ? 
-          _buildLoaderListItem() : _buildDailyItemCard(searchState, counter);
-  }
-
-
-  Widget _buildLoaderListItem() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-
-  Stack _buildDailyItemCard(SearchState searchState, int position) {
-      var searchResult = searchState.getSearchResultFor(position);
-      return Stack(
+  Widget _buildDailyItemCard(SearchState searchState) {
+      var searchResult = searchState.getSearchResultFor(searchState.searchResultList.length - 1);
+      return GestureDetector(
+        onHorizontalDragEnd: (details) {
+          debugPrint("DOWN GESTURE __PAGE__ DETAILS: $details");
+         _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
+        },
+        child: Stack(
         children: [
           Container(
             width: double.infinity,
@@ -130,22 +138,24 @@ class _DailyInfoPageState extends State<DailyInfoPage> {
               ],
             ),
             decoration: BoxDecoration(
-              gradient: gradients[position % gradients.length],
+              gradient: gradients[searchState.searchResultList.length - 1 % gradients.length],
             ),
           ),
         ],
-      );
+      ),
+    );
+      
   }
 
-  //NOTIFICATION LISTENTER NOT WORKING AFTER FIRST SUCCESS
-  bool _handleScrollNotification(ScrollNotification notification, SearchState state) {
-    if(notification is ScrollEndNotification) {
-      debugPrint("SCROLL END NOTIFICATION");
-      counter = state.searchResultList.length + 1;
-      _searchBloc.fetchNextSwipePage(getPreviousDateFrom(state.currentDate));
-    }
-    return false;
-  }
+  // //NOTIFICATION LISTENTER NOT WORKING AFTER FIRST SUCCESS. MB need full-size page container first?
+  // bool _handleScrollNotification(ScrollNotification notification, SearchState state) {
+  //   //if(notification is ScrollEndNotification) {
+  //     debugPrint("SCROLL END NOTIFICATION");
+  //     counter = state.searchResultList.length + 1;
+  //     _searchBloc.fetchNextSwipePage(getPreviousDateFrom(state.currentDate));
+  //   //}
+  //   return false;
+  // }
 
   @override
   void dispose() {

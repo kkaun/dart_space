@@ -62,6 +62,8 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
       ..error = '');
   }
 
+  
+
   DailyInfoSearchResult getSearchResultFor(int position) => searchResultList[position];
 
   String getTextFor(DailyInfoSearchResult searchResult) {
