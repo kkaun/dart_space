@@ -15,8 +15,5 @@ DateTime getPreviousDateFrom(DateTime currentDateTime) => currentDateTime.subtra
 
 DateTime getNextDateFrom(DateTime currentDateTime) => currentDateTime.add(new Duration(days: 1));
 
-
-bool dateIsValid(DateTime date) {
-  debugPrint(date.toString());
-  return date.isAfter(DateTime(1995, 6, 17)) && date.isBefore(DateTime(2019, 05, 24));
-}
+bool dateIsValid(DateTime date) => date.isAfter(DateTime(1995, 6, 17)) 
+          && date.isBefore(DateTime.now().add(new Duration(days: 1)));

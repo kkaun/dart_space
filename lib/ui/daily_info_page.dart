@@ -8,9 +8,9 @@ import 'package:dart_space/util/date_utils.dart';
 import 'package:dart_space/ui/search/search_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:dart_space/ui/search/widget/standalone_image.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class DailyInfoPages extends StatefulWidget {
@@ -23,7 +23,6 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
   final _pageController = PageController();
-  final _flutterTts = new FlutterTts();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -56,7 +55,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
           if(state.isInitial) {
             return CenteredMessage(
               message: 'Starting search...',
-              iconData: Icons.ondemand_video
+              iconData: Icons.timelapse
             );
           }
           if(state.isLoading) {
@@ -97,6 +96,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
       controller: _pageController,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, position) {
+        //TODO Handle case when scrolling pageview too fast so it loads same results on further pages
         //debugPrint("_________________________POSITION : $position");
         //debugPrint("_________________________LAST RESULT INDEX : ${searchState.getLastResultIndex()}");
         return _buildPage(position, searchState);
@@ -116,46 +116,30 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
       } on RangeError {
         return _buildLoaderListItem();
       }
-      //debugPrint("URL : ${searchResult?.url ?? ""}");
-      //debugPrint("FINAL Media URL : ${searchResult?.getMediaContentUrl()}");
 
       return Container(
         child: SingleChildScrollView(
           child: Container(
               width: double.infinity,
                 child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.stretch,
-                //crossAxisAlignment: CrossAxisAlignment.center,
-                //mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[     
                   Container(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            new MaterialPageRoute(
-                              builder: (context) => StandaloneImageView(searchResult?.getMediaContentUrl())
-                            )
-                          );
-                        },
-                        child: CachedNetworkImage(
-                        imageUrl: searchResult?.getMediaContentUrl(),
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
-                        ),
+                      child: CachedNetworkImage(
+                            imageUrl: searchResult.getMediaContentUrl(),
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
                       ),
-                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RawMaterialButton(
-                        onPressed: () async { await _flutterTts.speak(searchResult.getMainText()); },
-                        child: new Icon(
-                          Icons.volume_up,
-                          color: Colors.white,
-                          size: 18.0,
-                        ),
-                        shape: new CircleBorder(),
+                        onPressed: () {
+                          _launchURL(searchResult.url ?? ''); 
+                        },
+                        child: _getContentMarkerIcon(searchResult.url ?? ''),
+                        shape: CircleBorder(),
                         elevation: 2.0,
                         fillColor: Colors.black54,
                         padding: const EdgeInsets.all(15.0),
@@ -171,10 +155,11 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                           ),
-                        child: Text(searchResult?.date,     
+                        child: Text(searchResult.date,     
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18.0, 
+                              fontFamily: 'VT323',
+                              fontSize: 19.0, 
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -183,14 +168,14 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                       ),
                       RawMaterialButton(
                         onPressed: () {
-                          Share.share(searchResult.getMainText());
+                          shareSearchItemInfo(searchResult);
                         },
-                        child: new Icon(
+                        child: Icon(
                           Icons.share,
                           color: Colors.white,
                           size: 18.0,
                         ),
-                        shape: new CircleBorder(),
+                        shape: CircleBorder(),
                         elevation: 2.0,
                         fillColor: Colors.black54,
                         padding: const EdgeInsets.all(15.0),
@@ -199,7 +184,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                   ),
                   Container(
                       padding: EdgeInsets.only(left: 20, top: 5, bottom: 15, right: 20),
-                      child: Text(searchResult?.title ?? "Title not present",     
+                      child: Text(searchResult.title ?? "Title not present",     
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 17.0, 
@@ -229,6 +214,30 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
   }
 
 
+  void shareSearchItemInfo(DailyInfoSearchResult searchResult) {
+    StringBuffer sb = StringBuffer();
+    sb.writeAll([searchResult.title ?? '', '\n\n' 
+    , 'Date published: ', searchResult.date, '\n\n',
+    searchResult.getMainText(), 
+    '\n\n', searchResult.url ?? '']);
+    final strToShare = sb.toString();
+    Share.share(strToShare);
+  }
+
+
+  Icon _getContentMarkerIcon(String url) {
+    if(url.contains("youtube.com")) 
+    return Icon(
+        Icons.ondemand_video,
+        color: Colors.white,
+        size: 18.0,);
+    else return Icon(
+        Icons.image,
+        color: Colors.white,
+        size: 18.0,);
+  }
+
+
   Future _selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
         context: context,
@@ -237,6 +246,23 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
         lastDate: DateTime.now()
     );
     if(picked != null) _searchBloc.onDatePickSearchInitiated(picked);  //SET DATE AS EVENT!?
+  }
+
+
+  _launchURL(String mediaUrl) async {
+    if (await canLaunch(mediaUrl)) {
+      await launch(mediaUrl);
+    } else {
+      Fluttertoast.showToast(
+        msg: "Could not launch $mediaUrl",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 3,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0
+      ); 
+    }
   }
 
 
