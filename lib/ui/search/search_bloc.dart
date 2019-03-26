@@ -4,7 +4,7 @@ import 'package:dart_space/ui/search/search_event.dart';
 import 'package:dart_space/ui/search/search_state.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_error.dart';
 import 'package:dart_space/util/date_utils.dart';
-import 'package:flutter/material.dart';
+
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
@@ -34,7 +34,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SearchState currentState,
     SearchEvent event,
   ) async* {
-    debugPrint('IN BLOC - mapEventToState async!');
     if(event is DateInitialSearchEvent) {
       yield* mapInitialDailySearch(event);
     } else if(event is DateChosenSearchEvent) {
@@ -51,7 +50,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if(dateIsValid(event.date)) {
         yield(SearchState.loading(DateTime.now()));
         try {
-          debugPrint('try/catch after SearchState.loading()');
           final searchResults = await _dailyInfoRepository.searchDailyInfo(false, event.date);
           yield SearchState.success(searchResults, event.date);
         } on DailyInfoSearchError catch(e) {
@@ -70,7 +68,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if(dateIsValid(event.date)) {
         yield(SearchState.loading(event.date));
         try {
-          debugPrint('try/catch after SearchState.loading()');
           final searchResults = await _dailyInfoRepository.searchDailyInfo(true, event.date);
           yield SearchState.success(searchResults, event.date);
         } on DailyInfoSearchError catch(e) {
@@ -85,7 +82,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Stream<SearchState> mapNextDailySearch(DateNextSearchEvent event) async* {
     if(dateIsValid(event.date)) {
       try {
-        debugPrint("_____________IN mapNextDailySearch()");
         final searchResults = await _dailyInfoRepository.searchDailyInfo(false, event.date);
         yield SearchState.success(searchResults, event.date);
       } on DailyInfoSearchError catch(e) {

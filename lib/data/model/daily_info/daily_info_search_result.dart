@@ -43,6 +43,12 @@ abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, Dai
     } else return mediaUrl;
   }
 
+  String getMainText() {
+    final _dailyInfoExplanation = explanation ?? "No Explanation provided";
+    final _dailyInfoCopyright = copyright ?? "No Copyright info provided";
+    return _dailyInfoExplanation + '\n\n' + _dailyInfoCopyright;
+  }
+
   String toJson() {
     return json.encode(serializers.serializeWith(DailyInfoSearchResult.serializer, this));
   }

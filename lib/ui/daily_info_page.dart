@@ -1,3 +1,4 @@
+import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'package:dart_space/ui/search/search_state.dart';
 import 'package:dart_space/ui/search/widget/centered_message.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:dart_space/ui/search/search_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:dart_space/ui/search/widget/standalone_image.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:share/share.dart';
 
 
 class DailyInfoPages extends StatefulWidget {
@@ -20,6 +23,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
   final _pageController = PageController();
+  final _flutterTts = new FlutterTts();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -42,7 +46,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.calendar_today),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black54,
         tooltip: 'Open Calendar',
         onPressed: () => _selectDate(context),
       ),
@@ -93,8 +97,8 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
       controller: _pageController,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, position) {
-        debugPrint("_________________________POSITION : $position");
-        debugPrint("_________________________LAST RESULT INDEX : ${searchState.getLastResultIndex()}");
+        //debugPrint("_________________________POSITION : $position");
+        //debugPrint("_________________________LAST RESULT INDEX : ${searchState.getLastResultIndex()}");
         return _buildPage(position, searchState);
       },
     );
@@ -102,7 +106,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
 
   Widget _buildPage(int pageViewPosition, SearchState searchState) {
     
-      var searchResult;
+      DailyInfoSearchResult searchResult;
       
       try {
         if(searchState.getLastResultIndex() < pageViewPosition) return _buildLoaderListItem();
@@ -141,25 +145,78 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                         ),
                       ),
                     ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: Text(searchResult?.title ?? "Title not present",     
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.0, 
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RawMaterialButton(
+                        onPressed: () async { await _flutterTts.speak(searchResult.getMainText()); },
+                        child: new Icon(
+                          Icons.volume_up,
+                          color: Colors.white,
+                          size: 18.0,
+                        ),
+                        shape: new CircleBorder(),
+                        elevation: 2.0,
+                        fillColor: Colors.black54,
+                        padding: const EdgeInsets.all(15.0),
                       ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 90),
-                    child: Text(searchState.getTextFor(searchResult),
-                          style: TextStyle(
-                            fontSize: 14.0, 
-                            color: Colors.black,
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        child: Container(
+                          padding: EdgeInsets.all(14),
+                          decoration: ShapeDecoration(
+                            color: Colors.black54,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white30, width: 2),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                          ),
+                        child: Text(searchResult?.date,     
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18.0, 
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                      ),
+                      RawMaterialButton(
+                        onPressed: () {
+                          Share.share(searchResult.getMainText());
+                        },
+                        child: new Icon(
+                          Icons.share,
+                          color: Colors.white,
+                          size: 18.0,
+                        ),
+                        shape: new CircleBorder(),
+                        elevation: 2.0,
+                        fillColor: Colors.black54,
+                        padding: const EdgeInsets.all(15.0),
+                      ),
+                    ],
+                  ),
+                  Container(
+                      padding: EdgeInsets.only(left: 20, top: 5, bottom: 15, right: 20),
+                      child: Text(searchResult?.title ?? "Title not present",     
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 17.0, 
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        ),
+                  ),
+                  Container(
+                      padding: EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 90),
+                      child: Text(searchResult.getMainText(),
+                            style: TextStyle(
+                              fontFamily: 'VT323',
+                              fontSize: 16.0, 
+                              color: Colors.black,
+                            ),
+                          ),
                   ),
                 ],
               ),

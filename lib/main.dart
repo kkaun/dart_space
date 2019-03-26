@@ -1,8 +1,6 @@
 import 'package:dart_space/injection_container.dart';
 import 'package:dart_space/ui/daily_info_page.dart';
-import 'package:dart_space/ui/search/search_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {

@@ -3,10 +3,7 @@ library search_state;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
-
 part 'search_state.g.dart';
-
-//TODO MAKE DATE UTIL for switching dates?
 
 abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   // fields go here
@@ -27,7 +24,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
 
   //Called when initially launching the app
   factory SearchState.initial(DateTime date) {
-    print('STATE ---------------- initial()');
     return SearchState((b) => b
     ..isLoading = false
     ..currentDate = date
@@ -37,7 +33,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   factory SearchState.loading(DateTime date) {
-    print('STATE ---------------- loading()');
     return SearchState((b) => b
       ..isLoading = true
       ..currentDate = date
@@ -46,7 +41,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   factory SearchState.success(List<DailyInfoSearchResult> resultList, DateTime nextDate) {
-    print('STATE ---------------- success(), SEARCH RESULTS SIZE : ${resultList.length}');
     return SearchState((b) => b
       ..isLoading = false
       ..currentDate = nextDate
@@ -55,7 +49,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   factory SearchState.failure(String error) {
-    print('STATE ---------------- failure()');
     return SearchState((b) => b
       ..isLoading = false
       ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
@@ -63,12 +56,6 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   }
 
   DailyInfoSearchResult getSearchResultFor(int position) => searchResultList[position];
-
-  String getTextFor(DailyInfoSearchResult searchResult) {
-    final _dailyInfoExplanation = searchResult.explanation ?? "No Explanation provided";
-    final _dailyInfoCopyright = searchResult.copyright ?? "No Copyright info provided";
-    return _dailyInfoCopyright + '\n' + _dailyInfoExplanation;
-  }
 
   int getResultCount() => searchResultList.length;
 

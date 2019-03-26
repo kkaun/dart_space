@@ -8,7 +8,7 @@ abstract class SearchEvent {}
 
 abstract class DateInitialSearchEvent extends SearchEvent
 implements Built<DateInitialSearchEvent, DateInitialSearchEventBuilder> {
-  // fields go here
+  
   DateTime get date;
 
   DateInitialSearchEvent._();
@@ -18,7 +18,7 @@ implements Built<DateInitialSearchEvent, DateInitialSearchEventBuilder> {
 
 abstract class DateChosenSearchEvent extends SearchEvent
 implements Built<DateChosenSearchEvent, DateChosenSearchEventBuilder> {
-  // fields go here
+  
   DateTime get date;
 
   DateChosenSearchEvent._();
@@ -28,7 +28,7 @@ implements Built<DateChosenSearchEvent, DateChosenSearchEventBuilder> {
 
 abstract class DateNextSearchEvent  extends SearchEvent
 implements Built<DateNextSearchEvent, DateNextSearchEventBuilder> {
-  // fields go here
+  
   DateTime get date;
   
   DateNextSearchEvent._();
