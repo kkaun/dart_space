@@ -16,12 +16,13 @@ class DailyInfoRepository {
 
   List<DailyInfoSearchResult> cachedResults = List<DailyInfoSearchResult>();
 
-  Future<List<DailyInfoSearchResult>> searchDailyInfo(bool resetResults, DateTime currentDate) async {
+  Future<List<DailyInfoSearchResult>> searchDailyInfo(bool resetResultsBeforeAdd, DateTime currentDate) async {
     final searchResult = await _dailyInfoDataSource.searchDailyInfo(baseFormatter.format(currentDate));
     debugPrint("Repository - NEXT SEARCH RESULT : ${searchResult.title}");
     currentSearchDate = currentDate;
-    if(resetResults) {
+    if(resetResultsBeforeAdd) {
       cachedResults = List<DailyInfoSearchResult>();
+      cachedResults.add(searchResult);
     } else {
       cachedResults.add(searchResult);
       debugPrint("Repository - SEARCH RESULTS SIZE: ${cachedResults.length}");

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {
-  debugPrint("in main");
   initKiwi();
   runApp(DartSpaceApp());  
 }
@@ -19,7 +18,7 @@ class DartSpaceApp extends StatelessWidget {
       theme: ThemeData(
         canvasColor: Colors.primaries[6],
       ),
-      home: DailyInfoPage(),
+      home: DailyInfoPages(),
     );
   }
 }

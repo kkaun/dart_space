@@ -7,18 +7,19 @@ import 'package:dart_space/util/date_utils.dart';
 import 'package:dart_space/ui/search/search_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:dart_space/ui/search/widget/standalone_image.dart';
 
 
-class DailyInfoPage extends StatefulWidget {
+class DailyInfoPages extends StatefulWidget {
   @override
-  _DailyInfoPageState createState() => _DailyInfoPageState();
+  _DailyInfoPagesState createState() => _DailyInfoPagesState();
 }
 
-class _DailyInfoPageState extends State<DailyInfoPage> 
-    with AutomaticKeepAliveClientMixin<DailyInfoPage> {
+class _DailyInfoPagesState extends State<DailyInfoPages> 
+    with AutomaticKeepAliveClientMixin<DailyInfoPages> {
 
   final _searchBloc = kiwi.Container().resolve<SearchBloc>();
-  //final _pageController = PageController();
+  final _pageController = PageController();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -38,9 +39,7 @@ class _DailyInfoPageState extends State<DailyInfoPage>
   Scaffold _buildScaffold() {
     return Scaffold(
       key: scaffoldKey,
-    
       backgroundColor: Colors.white,
-      //appBar: DailyInfoAppBar().build(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.calendar_today),
         backgroundColor: Colors.black,
@@ -91,10 +90,12 @@ class _DailyInfoPageState extends State<DailyInfoPage>
           _searchBloc.fetchNextSwipePage(getPreviousDateFrom(searchState.currentDate));
         }
       },
-      //controller: _pageController,
+      controller: _pageController,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, position) {
-          return _buildPage(position, searchState);
+        debugPrint("_________________________POSITION : $position");
+        debugPrint("_________________________LAST RESULT INDEX : ${searchState.getLastResultIndex()}");
+        return _buildPage(position, searchState);
       },
     );
   }
@@ -125,10 +126,19 @@ class _DailyInfoPageState extends State<DailyInfoPage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[     
                   Container(
-                      child: CachedNetworkImage(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (context) => StandaloneImageView(searchResult?.getMediaContentUrl())
+                            )
+                          );
+                        },
+                        child: CachedNetworkImage(
                         imageUrl: searchResult?.getMediaContentUrl(),
                         placeholder: (context, url) => CircularProgressIndicator(),
                         errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
+                        ),
                       ),
                     ),
                   Container(
@@ -169,7 +179,7 @@ class _DailyInfoPageState extends State<DailyInfoPage>
         firstDate: DateTime(1995, 6, 17),
         lastDate: DateTime.now()
     );
-    //if(picked != null) setState(() => _value = picked.toString());  //SET DATE AS EVENT!?
+    if(picked != null) _searchBloc.onDatePickSearchInitiated(picked);  //SET DATE AS EVENT!?
   }
 
 

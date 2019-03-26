@@ -13,17 +13,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc(this._dailyInfoRepository) : super();
 
   @override
-  SearchState get initialState => SearchState.initial();
+  SearchState get initialState => SearchState.initial(DateTime.now());
 
 
   void onSwipeSearchInitiated() {
-    debugPrint("IN BLOC - INITIAL");
     dispatch(DateInitialSearchEvent((b) => b..date = DateTime.now()));
   }
 
-  void fetchNextSwipePage(DateTime date) {
-    debugPrint("IN BLOC - NEXT PAGE");
-    dispatch(DateNextSearchEvent((b) => b..date = date));
+  void onDatePickSearchInitiated(DateTime pickedDate) {
+    dispatch(DateChosenSearchEvent((b) => b.date = pickedDate));
+  }
+
+  void fetchNextSwipePage(DateTime nextDate) {
+    dispatch(DateNextSearchEvent((b) => b..date = nextDate));
   }
 
 
@@ -35,6 +37,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     debugPrint('IN BLOC - mapEventToState async!');
     if(event is DateInitialSearchEvent) {
       yield* mapInitialDailySearch(event);
+    } else if(event is DateChosenSearchEvent) {
+      yield* mapPickedDateDailySearch(event);
     } else if(event is DateNextSearchEvent) {
       yield* mapNextDailySearch(event);
     }
@@ -42,13 +46,32 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<SearchState> mapInitialDailySearch(DateInitialSearchEvent event) async* {
     if(event.date == null) {
-      yield(SearchState.initial());
+      yield(SearchState.initial(DateTime.now()));
     } else {
       if(dateIsValid(event.date)) {
-        yield(SearchState.loading());
+        yield(SearchState.loading(DateTime.now()));
         try {
           debugPrint('try/catch after SearchState.loading()');
           final searchResults = await _dailyInfoRepository.searchDailyInfo(false, event.date);
+          yield SearchState.success(searchResults, event.date);
+        } on DailyInfoSearchError catch(e) {
+          yield SearchState.failure(e.message);
+        } on NoSearchResultsException catch(e) {
+          yield SearchState.failure(e.message);
+        }
+      } else yield SearchState.failure('Date is not valid!');
+    }
+  }
+
+  Stream<SearchState> mapPickedDateDailySearch(DateChosenSearchEvent event) async* {
+    if(event.date == null) {
+      yield(SearchState.initial(event.date));
+    } else {
+      if(dateIsValid(event.date)) {
+        yield(SearchState.loading(event.date));
+        try {
+          debugPrint('try/catch after SearchState.loading()');
+          final searchResults = await _dailyInfoRepository.searchDailyInfo(true, event.date);
           yield SearchState.success(searchResults, event.date);
         } on DailyInfoSearchError catch(e) {
           yield SearchState.failure(e.message);

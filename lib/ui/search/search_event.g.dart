@@ -87,6 +87,86 @@ class DateInitialSearchEventBuilder
   }
 }
 
+class _$DateChosenSearchEvent extends DateChosenSearchEvent {
+  @override
+  final DateTime date;
+
+  factory _$DateChosenSearchEvent(
+          [void updates(DateChosenSearchEventBuilder b)]) =>
+      (new DateChosenSearchEventBuilder()..update(updates)).build();
+
+  _$DateChosenSearchEvent._({this.date}) : super._() {
+    if (date == null) {
+      throw new BuiltValueNullFieldError('DateChosenSearchEvent', 'date');
+    }
+  }
+
+  @override
+  DateChosenSearchEvent rebuild(void updates(DateChosenSearchEventBuilder b)) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  DateChosenSearchEventBuilder toBuilder() =>
+      new DateChosenSearchEventBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is DateChosenSearchEvent && date == other.date;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(0, date.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('DateChosenSearchEvent')
+          ..add('date', date))
+        .toString();
+  }
+}
+
+class DateChosenSearchEventBuilder
+    implements Builder<DateChosenSearchEvent, DateChosenSearchEventBuilder> {
+  _$DateChosenSearchEvent _$v;
+
+  DateTime _date;
+  DateTime get date => _$this._date;
+  set date(DateTime date) => _$this._date = date;
+
+  DateChosenSearchEventBuilder();
+
+  DateChosenSearchEventBuilder get _$this {
+    if (_$v != null) {
+      _date = _$v.date;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(DateChosenSearchEvent other) {
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
+    _$v = other as _$DateChosenSearchEvent;
+  }
+
+  @override
+  void update(void updates(DateChosenSearchEventBuilder b)) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$DateChosenSearchEvent build() {
+    final _$result = _$v ?? new _$DateChosenSearchEvent._(date: date);
+    replace(_$result);
+    return _$result;
+  }
+}
+
 class _$DateNextSearchEvent extends DateNextSearchEvent {
   @override
   final DateTime date;

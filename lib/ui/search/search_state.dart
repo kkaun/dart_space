@@ -26,31 +26,23 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
   factory SearchState([updates(SearchStateBuilder b)]) = _$SearchState;
 
   //Called when initially launching the app
-  factory SearchState.initial() {
+  factory SearchState.initial(DateTime date) {
     print('STATE ---------------- initial()');
     return SearchState((b) => b
     ..isLoading = false
-    ..currentDate = DateTime.now()
-    ..searchResultList.replace(List<DailyInfoSearchResult>())
+    ..currentDate = date
+    ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
     ..error = ''
     );
   }
 
-  factory SearchState.loading() {
+  factory SearchState.loading(DateTime date) {
     print('STATE ---------------- loading()');
     return SearchState((b) => b
       ..isLoading = true
-      ..currentDate = DateTime.now()
+      ..currentDate = date
       ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
       ..error = '');
-  }
-
-  factory SearchState.failure(String error) {
-    print('STATE ---------------- failure()');
-    return SearchState((b) => b
-      ..isLoading = false
-      ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
-      ..error = error);
   }
 
   factory SearchState.success(List<DailyInfoSearchResult> resultList, DateTime nextDate) {
@@ -60,6 +52,14 @@ abstract class SearchState implements Built<SearchState, SearchStateBuilder> {
       ..currentDate = nextDate
       ..searchResultList.replace(resultList)
       ..error = '');
+  }
+
+  factory SearchState.failure(String error) {
+    print('STATE ---------------- failure()');
+    return SearchState((b) => b
+      ..isLoading = false
+      ..searchResultList.replace(BuiltList<DailyInfoSearchResult>())
+      ..error = error);
   }
 
   DailyInfoSearchResult getSearchResultFor(int position) => searchResultList[position];

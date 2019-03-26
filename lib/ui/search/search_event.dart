@@ -16,6 +16,16 @@ implements Built<DateInitialSearchEvent, DateInitialSearchEventBuilder> {
   factory DateInitialSearchEvent([updates(DateInitialSearchEventBuilder b)]) = _$DateInitialSearchEvent;
 }
 
+abstract class DateChosenSearchEvent extends SearchEvent
+implements Built<DateChosenSearchEvent, DateChosenSearchEventBuilder> {
+  // fields go here
+  DateTime get date;
+
+  DateChosenSearchEvent._();
+
+  factory DateChosenSearchEvent([updates(DateChosenSearchEventBuilder b)]) = _$DateChosenSearchEvent;
+}
+
 abstract class DateNextSearchEvent  extends SearchEvent
 implements Built<DateNextSearchEvent, DateNextSearchEventBuilder> {
   // fields go here
