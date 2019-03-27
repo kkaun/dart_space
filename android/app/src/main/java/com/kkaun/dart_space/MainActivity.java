@@ -1,4 +1,4 @@
-package com.example.dart_space;
+package com.kkaun.dart_space;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
