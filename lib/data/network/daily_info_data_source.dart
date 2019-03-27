@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:dart_space/data/model/daily_info/daily_info_search_error.dart';
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
-import 'api_key.dart';
+import 'package:dart_space/util/service_utils.dart';
 
 class DailyInfoDataSource {
 

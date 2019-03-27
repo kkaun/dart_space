@@ -10,7 +10,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 
 class DailyInfoPages extends StatefulWidget {
@@ -254,17 +253,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
   _launchURL(String mediaUrl) async {
     if (await canLaunch(mediaUrl)) {
       await launch(mediaUrl);
-    } else {
-      Fluttertoast.showToast(
-        msg: "Could not launch $mediaUrl",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 3,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 16.0
-      ); 
-    }
+    } else { } //TODO
   }
 
 

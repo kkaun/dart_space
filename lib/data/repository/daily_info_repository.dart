@@ -1,9 +1,7 @@
 
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'package:dart_space/data/network/daily_info_data_source.dart';
-import 'package:dart_space/ui/search/search_event.dart';
 import 'package:dart_space/util/date_utils.dart';
-import 'package:flutter/material.dart';
 
 
 class DailyInfoRepository {
