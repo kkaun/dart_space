@@ -12,7 +12,6 @@ part 'daily_info_search_result.g.dart';
 
 abstract class DailyInfoSearchResult implements Built<DailyInfoSearchResult, DailyInfoSearchResultBuilder> {
   // fields go here
-  //TODO deal with possible nullables!
   @nullable
   @BuiltValueField(wireName: 'copyright')
   String get copyright;

@@ -1,6 +1,6 @@
 import 'package:dart_space/data/model/daily_info/daily_info_search_result.dart';
 import 'package:dart_space/ui/search/search_state.dart';
-import 'package:dart_space/ui/search/widget/centered_message.dart';
+import 'package:dart_space/ui/centered_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dart_space/util/gradients.dart';
@@ -49,29 +49,31 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
         tooltip: 'Open Calendar',
         onPressed: () => _selectDate(context),
       ),
-      body: BlocBuilder(
-        bloc: _searchBloc,
-        builder: (context, SearchState state) {
-          if(state.isInitial) {
-            return CenteredMessage(
-              message: 'Starting search...',
-              iconData: Icons.timelapse
-            );
-          }
-          if(state.isLoading) {
-            return Center(
-              child: CircularProgressIndicator()
-            );
-          }
-          if(state.isSuccessful) {
-            return _buildItemDependingOnState(state);
-          } else { //error
-            return CenteredMessage(
-              message: state.error,
-              iconData: Icons.error_outline,
-            );
-          }
-        },
+      body: SafeArea(
+        child: BlocBuilder(
+          bloc: _searchBloc,
+          builder: (context, SearchState state) {
+            if(state.isInitial) {
+              return CenteredMessage(
+                message: 'Starting search...',
+                iconData: Icons.timelapse
+              );
+            }
+            if(state.isLoading) {
+              return Center(
+                child: CircularProgressIndicator()
+              );
+            }
+            if(state.isSuccessful) {
+              return _buildItemDependingOnState(state);
+            } else { //error
+              return CenteredMessage(
+                message: state.error,
+                iconData: Icons.error_outline,
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -125,11 +127,11 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[     
                   Container(
-                      child: CachedNetworkImage(
-                            imageUrl: searchResult.getMediaContentUrl(),
-                            placeholder: (context, url) => CircularProgressIndicator(),
-                            errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
-                      ),
+                    child: CachedNetworkImage(
+                        imageUrl: searchResult.getMediaContentUrl(),
+                        placeholder: (context, url) => CircularProgressIndicator(),
+                        errorWidget: (context, url, _imageLoadingError) => Icon(Icons.error),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +140,7 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
                         onPressed: () {
                           _launchURL(searchResult.url ?? ''); 
                         },
-                        child: _getContentMarkerIcon(searchResult.url ?? ''),
+                        child: _getContentMarkerIcon(searchResult.media_type ?? ''),
                         shape: CircleBorder(),
                         elevation: 2.0,
                         fillColor: Colors.black54,
@@ -216,17 +218,17 @@ class _DailyInfoPagesState extends State<DailyInfoPages>
 
   void shareSearchItemInfo(DailyInfoSearchResult searchResult) {
     StringBuffer sb = StringBuffer();
-    sb.writeAll([searchResult.title ?? '', '\n\n' 
-    , 'Date published: ', searchResult.date, '\n\n',
-    searchResult.getMainText(), 
-    '\n\n', searchResult.url ?? '']);
+    sb.writeAll([searchResult.title ?? '', 
+    '\n\n', 'Date published: ', searchResult.date, 
+    '\n\n', searchResult.getMainText(), 
+    '\n\n', 'Media URL : ', searchResult.url ?? '']);
     final strToShare = sb.toString();
     Share.share(strToShare);
   }
 
 
-  Icon _getContentMarkerIcon(String url) {
-    if(url.contains("youtube.com")) 
+  Icon _getContentMarkerIcon(String mediaType) {
+    if(mediaType == 'video') 
     return Icon(
         Icons.ondemand_video,
         color: Colors.white,
